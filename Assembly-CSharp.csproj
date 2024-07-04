@@ -61,14 +61,17 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2023.2.18f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Tile.cs" />
-    <Compile Include="Assets\Scripts\WorldGeneration\TextureGenerator.cs" />
-    <Compile Include="Assets\Scripts\River.cs" />
-    <Compile Include="Assets\Scripts\SimplexNoise\SimplexNoiseGenerator.cs" />
-    <Compile Include="Assets\Scripts\EquatorWidthChanger.cs" />
-    <Compile Include="Assets\Scripts\WorldGeneration\RiversGenerator.cs" />
-    <Compile Include="Assets\Scripts\Generator.cs" />
-    <Compile Include="Assets\Scripts\SimplexNoise\SimplexNoise.cs" />
+    <Compile Include="Assets\Scripts\WorldGeneration\SimplexNoise\SimplexNoiseGenerator.cs" />
+    <Compile Include="Assets\Scripts\WorldGeneration\TemperatureGen\EquatorWidthChanger.cs" />
+    <Compile Include="Assets\Scripts\WorldGeneration\GlobalGenSettings\WorldSettings.cs" />
+    <Compile Include="Assets\Scripts\WorldGeneration\MapGen\TextureGenerator.cs" />
+    <Compile Include="Assets\Scripts\WorldGeneration\SimplexNoise\SimplexNoise.cs" />
+    <Compile Include="Assets\Scripts\WorldGeneration\BasicTypes\Tile.cs" />
+    <Compile Include="Assets\Scripts\WorldGeneration\BasicTypes\Chunk.cs" />
+    <Compile Include="Assets\Scripts\WorldGeneration\GlobalGenSettings\WorldGenerator.cs" />
+    <Compile Include="Assets\Scripts\WorldGeneration\RiversGen\RiversGenerator.cs" />
+    <Compile Include="Assets\Scripts\WorldGeneration\GlobalGenSettings\Generator.cs" />
+    <Compile Include="Assets\Scripts\WorldGeneration\BasicTypes\River.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
