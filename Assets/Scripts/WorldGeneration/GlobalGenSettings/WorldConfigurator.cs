@@ -5,14 +5,15 @@ public class WorldConfigurator : MonoBehaviour
     [SerializeField] private GlobalWorldGenSettings globalWorldGenSettings;
     [SerializeField] private WorldTempSettings worldTempSettings;
     [SerializeField] private WorldMoistureSettings worldMoistureSettings;
-    private WorldSettings worldSettings;
-
-    private void Awake()
+    public WorldSettings worldSettings;
+    public void ResetSettings()
     {
         globalWorldGenSettings = new GlobalWorldGenSettings();
+        worldTempSettings = new WorldTempSettings();
+        worldMoistureSettings = new WorldMoistureSettings();
     }
     public void AcceptWorldSettings()
     {
-        worldSettings = new WorldSettings(globalWorldGenSettings);
+        worldSettings = new WorldSettings(globalWorldGenSettings, worldTempSettings, worldMoistureSettings);
     }
 }
