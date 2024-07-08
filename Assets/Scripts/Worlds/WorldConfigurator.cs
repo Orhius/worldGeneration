@@ -1,19 +1,22 @@
+using System;
 using UnityEngine;
 
 public class WorldConfigurator : MonoBehaviour
 {
+    public WorldSettings worldSettings;
+
+    public static event Action<World> OnWorldCreated;
+
     [SerializeField] private GlobalWorldGenSettings globalWorldGenSettings;
     [SerializeField] private WorldTempSettings worldTempSettings;
     [SerializeField] private WorldMoistureSettings worldMoistureSettings;
-    public WorldSettings worldSettings;
     public void ResetSettings()
     {
-        globalWorldGenSettings = new GlobalWorldGenSettings();
-        worldTempSettings = new WorldTempSettings();
-        worldMoistureSettings = new WorldMoistureSettings();
+        
     }
-    public void AcceptWorldSettings()
+    public void AceptWorld()
     {
         worldSettings = new WorldSettings(globalWorldGenSettings, worldTempSettings, worldMoistureSettings);
+        OnWorldCreated.Invoke(new World(worldSettings));
     }
 }

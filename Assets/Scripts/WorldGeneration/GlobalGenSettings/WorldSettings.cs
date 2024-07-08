@@ -1,10 +1,12 @@
-using UnityEngine;
+using System;
+using Unity.VisualScripting;
 
+[Serializable]
 public class WorldSettings
 {
-    GlobalWorldGenSettings globalWorldGenSettings;
-    WorldTempSettings worldTempSettings;
-    WorldMoistureSettings worldMoistureSettings;
+    public GlobalWorldGenSettings globalWorldGenSettings;
+    public WorldTempSettings worldTempSettings;
+    public WorldMoistureSettings worldMoistureSettings;
 
     public WorldSettings(GlobalWorldGenSettings globalWorldGenSettings, WorldTempSettings worldTempSettings, WorldMoistureSettings worldMoistureSettings)
     {

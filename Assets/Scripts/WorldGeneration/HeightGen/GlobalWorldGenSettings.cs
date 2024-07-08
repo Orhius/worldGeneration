@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class GlobalWorldGenSettings : MonoBehaviour
 {
+    [Header("global")]
+    public string worldName = "New World";
+
     [Header("world gen")]
     public ulong width = 256;
     public ulong Width
@@ -50,32 +53,37 @@ public class GlobalWorldGenSettings : MonoBehaviour
     private readonly List<ushort> primaryChunkSizeList = new List<ushort>() { 128, 256 };
     private readonly List<byte> chunkSizeList = new List<byte>() { 16, 32 };
 
+    [Header("dropdowns")]
     [SerializeField] private TMP_Dropdown heightDropdown;
     [SerializeField] private TMP_Dropdown primaryChunkSizeDropdown;
     [SerializeField] private TMP_Dropdown ChunkSizeDropdown;
     [SerializeField] private TMP_Dropdown worldTypeDropdown;
 
-    [SerializeField] private TMP_InputField widthDropdown;
-    [SerializeField] private TMP_InputField lengthDropdown;
+    [Header("input fields")]
+    [SerializeField] private TMP_InputField worldNameInputField;
+    [SerializeField] private TMP_InputField widthInputField;
+    [SerializeField] private TMP_InputField lengthInputField;
     [SerializeField] private TMP_InputField seedInputField;
 
     private void Awake()
     {
-        widthDropdown.onValueChanged.AddListener(x => ChangeWorldWidth());
-        lengthDropdown.onValueChanged.AddListener(x => ChangeWorldLength());
         heightDropdown.onValueChanged.AddListener(x => ChangeWorldHeight());
         primaryChunkSizeDropdown.onValueChanged.AddListener(x => ChangePrimaryChunkSize());
         ChunkSizeDropdown.onValueChanged.AddListener(x => ChangeChunkSize());
         worldTypeDropdown.onValueChanged.AddListener(x => ChangeWorldType());
 
+        worldNameInputField.onValueChanged.AddListener(x => ChangeWorldName());
+        widthInputField.onValueChanged.AddListener(x => ChangeWorldWidth());
+        lengthInputField.onValueChanged.AddListener(x => ChangeWorldLength());
         seedInputField.onValueChanged.AddListener(x => ChangeSeed());
     }
     private void Start()
     {
+        worldNameInputField.text = worldName;
         Seed = (uint)UnityEngine.Random.Range(0, 99999);
         seedInputField.text = Seed.ToString();
-        widthDropdown.text = Width.ToString();
-        lengthDropdown.text = Length.ToString();
+        widthInputField.text = Width.ToString();
+        lengthInputField.text = Length.ToString();
 
         //height
         heightDropdown.ClearOptions();
@@ -114,17 +122,19 @@ public class GlobalWorldGenSettings : MonoBehaviour
         worldTypeDropdown.value = (int)worldType;
     }
 
+
+    public void ChangeWorldName() => worldName = worldNameInputField.text;
     public void ChangeWorldWidth()
     {
-        bool successfull = ulong.TryParse(widthDropdown.text, out width);
+        bool successfull = ulong.TryParse(widthInputField.text, out width);
         if (!successfull) Width = 1;
-        widthDropdown.text = Width.ToString();
+        widthInputField.text = Width.ToString();
     }
     public void ChangeWorldLength()
     {
-        bool successfull = ulong.TryParse(lengthDropdown.text, out length);
+        bool successfull = ulong.TryParse(lengthInputField.text, out length);
         if (!successfull) Length = 1;
-        lengthDropdown.text = Length.ToString();
+        lengthInputField.text = Length.ToString();
     }
     public void ChangeWorldHeight() => height = heighthList.ElementAt(heightDropdown.value);
     public void ChangeSeed()
