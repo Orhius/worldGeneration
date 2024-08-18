@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WorldData : MonoBehaviour
 {
-    public string worldName = string.Empty;
+    public string worldName = "New World";
     public string worldPath = string.Empty;
     public string worldFileName = string.Empty;
 
