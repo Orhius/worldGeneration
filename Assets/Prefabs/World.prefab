@@ -228,15 +228,15 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -443,3 +443,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81b116ebddefa0943ab04d5d145b58e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  settings:
+    globalWorldGenSettings: {fileID: 0}
+    worldTempSettings: {fileID: 0}
+    worldMoistureSettings: {fileID: 0}
+  data:
+    worldName: New World
+    worldPath: 
+    worldFileName: 
+  worldName: {fileID: 8598163440323952134}
+  worldInfo: {fileID: 4499178660220829767}

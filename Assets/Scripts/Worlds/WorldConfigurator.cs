@@ -17,6 +17,8 @@ public class WorldConfigurator : MonoBehaviour
     public void AceptWorld()
     {
         worldSettings = new WorldSettings(globalWorldGenSettings, worldTempSettings, worldMoistureSettings);
-        OnWorldCreated.Invoke(new World(worldSettings));
+        WorldData worldData = new WorldData();
+        //worldData.name = worldSettings.globalWorldGenSettings.worldName;
+        OnWorldCreated.Invoke(new World(worldSettings, worldData));
     }
 }
