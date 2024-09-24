@@ -4,10 +4,11 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public class GlobalWorldGenSettings : MonoBehaviour
+[Serializable]
+public class GlobalWorldGenSettings : MonoBehaviour, ICloneable
 {
     [Header("global")]
-    public string worldName = "New World";
+    public string worldName = "New world";
 
     [Header("world gen")]
     public ulong width = 256;
@@ -35,7 +36,7 @@ public class GlobalWorldGenSettings : MonoBehaviour
     public int height = 32;
     public ushort primaryChunkSize = 256;
     public byte chunkSize = 16;
-    private ulong seed = 0;
+    public ulong seed = 0;
     public ulong Seed
     {
         get { return seed; }
@@ -145,6 +146,22 @@ public class GlobalWorldGenSettings : MonoBehaviour
     public void ChangePrimaryChunkSize() => primaryChunkSize = primaryChunkSizeList.ElementAt(primaryChunkSizeDropdown.value);
     public void ChangeChunkSize() => chunkSize = chunkSizeList.ElementAt(ChunkSizeDropdown.value);
     public void ChangeWorldType() => worldType = (WorldType)worldTypeDropdown.value;
+
+    public object Clone()
+    {
+        var clone = new GlobalWorldGenSettings
+        {
+            worldName = worldName,
+            width = width,
+            length = length,
+            height = height,
+            seed = seed,
+            primaryChunkSize = primaryChunkSize,
+            chunkSize = chunkSize,
+            worldType = worldType
+        };
+        return clone;
+    }
 }
 public enum WorldType
 {

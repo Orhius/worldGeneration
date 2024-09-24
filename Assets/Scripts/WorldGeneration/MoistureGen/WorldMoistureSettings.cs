@@ -1,29 +1,15 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using TMPro;
-using UnityEngine;
 
-public class WorldMoistureSettings : MonoBehaviour
+[Serializable]
+public class WorldMoistureSettings : ICloneable
 {
-    [Header("moisture gen")]
     public WorldMoisture worldMoisture = WorldMoisture.normal;
-
-    [SerializeField] private TMP_Dropdown worldMoistureDropdown;
-
-
-    private void Awake()
+    public object Clone()
     {
-        worldMoistureDropdown.onValueChanged.AddListener(x => ChangeWorldMoisture());
+        var clone = new WorldMoistureSettings();
+        clone.worldMoisture = worldMoisture;
+        return clone;
     }
-    private void Start()
-    {
-        worldMoistureDropdown.ClearOptions();
-        List<string> namesWorldMoisture = Enum.GetNames(typeof(WorldMoisture)).ToList();
-        worldMoistureDropdown.AddOptions(namesWorldMoisture);
-        worldMoistureDropdown.value = (int)worldMoisture;
-    }
-    public void ChangeWorldMoisture() => worldMoisture = (WorldMoisture)worldMoistureDropdown.value;
 }
 public enum WorldMoisture
 {

@@ -24,8 +24,8 @@ public class WorldsManager : MonoBehaviour
         foreach (World world in worlds)
         {
             GameObject worldPref = Instantiate(worldPrefab, worldGrid);
-            worldPref.GetComponent<World>().settings = world.settings;
-            worldPref.GetComponent<World>().data = world.data;
+            worldPref.GetComponent<WorldObject>().world.settings = world.settings;
+            worldPref.GetComponent<WorldObject>().world.data = world.data;
             Instantiate(worldPref);
         }
     }
@@ -33,13 +33,15 @@ public class WorldsManager : MonoBehaviour
     public void AddNewWorldPanel(World world)
     {
         GameObject worldPref = Instantiate(worldPrefab, worldGrid);
-        World worldComp = worldPref.GetComponent<World>();
-        worldComp.settings = world.settings;
-        worldComp.data = world.data;
-        worldComp.worldName.text = world.settings.globalWorldGenSettings.worldName;
+        World worldComp = worldPref.GetComponent<WorldObject>().world;
+        worldComp.settings.globalWorldGenSettings = world.settings.globalWorldGenSettings;
+        worldComp.settings.worldTempSettings = world.settings.worldTempSettings;
+        worldComp.settings.worldMoistureSettings = world.settings.worldMoistureSettings;
+        worldComp.data = (WorldData)world.data.Clone();
         worldComp.data.worldName = world.settings.globalWorldGenSettings.worldName;
         worldComp.data.creationTime = DateTime.Now;
 
-        worldComp.worldInfo.text = $"creation time: {worldComp.data.creationTime.ToString("dd/MM/yyyy")}";
+        worldPref.GetComponent<WorldObject>().worldName.text = world.settings.globalWorldGenSettings.worldName;
+        worldPref.GetComponent<WorldObject>().worldInfo.text = $"creation time: {worldComp.data.creationTime.ToString("dd/MM/yyyy")}";
     }
 }
