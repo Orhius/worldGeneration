@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public class WorldTempSettings : ICloneable
+public class WorldTempSettings
 {
     public WorldTemperatureType worldTempType = WorldTemperatureType.realistic;
     public WorldTemperature worldTemperature = WorldTemperature.normal;
@@ -18,17 +18,6 @@ public class WorldTempSettings : ICloneable
             if (value >= 100) equatorWidthPercent = value;
             else equatorWidthPercent = 100;
         }
-    }
-
-    public object Clone()
-    {
-        var clone = new WorldTempSettings
-        {
-            worldTempType = worldTempType,
-            worldTemperature = worldTemperature,
-            EquatorWidthPercent = EquatorWidthPercent
-        };
-        return clone;
     }
 }
 public enum WorldTemperatureType

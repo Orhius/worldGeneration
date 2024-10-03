@@ -8,7 +8,7 @@ public class GlobalWorldGenSettingsUI : MonoBehaviour
 {
 
     [Header("world gen")]
-    [SerializeField] private GlobalWorldGenSettings globalWorldGenSettings;
+    public GlobalWorldGenSettings globalWorldGenSettings { private set; get; } = new();
 
     private List<int> heighthList = new List<int>() { 16, 32, 64 };
     private readonly List<ushort> primaryChunkSizeList = new List<ushort>() { 128, 256 };

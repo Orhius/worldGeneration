@@ -67,12 +67,16 @@
     <Compile Include="Assets\Scripts\WorldGeneration\SimplexNoise\SimplexNoiseGenerator.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\TemperatureGen\EquatorWidthChanger.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\GlobalGenSettings\WorldSettings.cs" />
+    <Compile Include="Assets\Scripts\WorldGeneration\MoistureGen\WorldMoistureSettingsUI.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\MapGen\TextureGenerator.cs" />
+    <Compile Include="Assets\Scripts\WorldGeneration\TemperatureGen\WorldTempSettingsUI.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\TemperatureGen\WorldTempSettings.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\SimplexNoise\SimplexNoise.cs" />
+    <Compile Include="Assets\Scripts\Worlds\WorldObject.cs" />
     <Compile Include="Assets\Scripts\Worlds\WorldGenerator.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\BasicTypes\Tile.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\BasicTypes\Chunk.cs" />
+    <Compile Include="Assets\Scripts\WorldGeneration\HeightGen\GlobalWorldGenSettingsUI.cs" />
     <Compile Include="Assets\Scripts\Helpers\ObjectSpawner.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\MoistureGen\WorldMoistureSettings.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\RiversGen\RiversGenerator.cs" />
@@ -557,6 +561,10 @@
     </Reference>
     <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.8.0\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Library\PackageCache\jillejr.newtonsoft.json-for-unity@13.0.102\Plugins\Newtonsoft.Json Editor\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Android.Types">

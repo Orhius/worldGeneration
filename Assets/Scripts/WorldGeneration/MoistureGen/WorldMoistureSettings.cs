@@ -1,15 +1,9 @@
 using System;
 
 [Serializable]
-public class WorldMoistureSettings : ICloneable
+public class WorldMoistureSettings
 {
     public WorldMoisture worldMoisture = WorldMoisture.normal;
-    public object Clone()
-    {
-        var clone = new WorldMoistureSettings();
-        clone.worldMoisture = worldMoisture;
-        return clone;
-    }
 }
 public enum WorldMoisture
 {

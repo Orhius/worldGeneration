@@ -25,8 +25,11 @@ public class WorldGenerator : MonoBehaviour
 
     public void LoadGameScene(World world)
     {
-        currentWorld = (World)world.DeepCopy();
+        Debug.Log(world.data.WorldName);
+        World thisWorld = WorldsManager.LoadWorldData(world.data.WorldName);
+        currentWorld = new World(thisWorld.settings, thisWorld.data);
+
+        SceneManager.LoadScene(GameSceneName);
         Debug.Log("waaaaaaaaaaaaagh");
-        //SceneManager.LoadScene(GameSceneName);
     }
 }

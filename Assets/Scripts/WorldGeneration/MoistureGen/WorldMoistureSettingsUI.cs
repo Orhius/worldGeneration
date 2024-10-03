@@ -8,7 +8,7 @@ public class WorldMoistureSettingsUI : MonoBehaviour
 {
     [Header("moisture gen")]
     [SerializeField] private TMP_Dropdown worldMoistureDropdown;
-    [SerializeField] private WorldMoistureSettings worldMoistureSettings;
+    public WorldMoistureSettings worldMoistureSettings { private set; get; } = new();
 
     private void Awake()
     {

@@ -3603,12 +3603,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldSettings:
-    globalWorldGenSettings: {fileID: 0}
-    worldTempSettings: {fileID: 0}
-    worldMoistureSettings: {fileID: 0}
-  globalWorldGenSettings: {fileID: 860460357}
-  worldTempSettings: {fileID: 860460356}
-  worldMoistureSettings: {fileID: 860460355}
+    globalWorldGenSettings:
+      worldName: New world
+      width: 256
+      length: 256
+      height: 32
+      primaryChunkSize: 256
+      chunkSize: 16
+      seed: 0
+      worldType: 0
+    worldTempSettings:
+      worldTempType: 0
+      worldTemperature: 1
+    worldMoistureSettings:
+      worldMoisture: 1
+  globalWorldGenSettingsUI: {fileID: 860460360}
+  worldTempSettingsUI: {fileID: 860460359}
+  worldMoistureSettingsUI: {fileID: 860460358}
 --- !u!114 &503592827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6482,6 +6493,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 786550133}
   m_CullTransparentMesh: 1
+--- !u!1 &801062424
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 801062426}
+  - component: {fileID: 801062425}
+  m_Layer: 0
+  m_Name: World Generator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &801062425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801062424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 191e46564a56182479c010fbc3b8ef58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentWorld:
+    settings:
+      globalWorldGenSettings:
+        worldName: New world
+        width: 256
+        length: 256
+        height: 32
+        primaryChunkSize: 256
+        chunkSize: 16
+        seed: 0
+        worldType: 0
+      worldTempSettings:
+        worldTempType: 0
+        worldTemperature: 1
+      worldMoistureSettings:
+        worldMoisture: 1
+  GameSceneName: GameScene
+--- !u!4 &801062426
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801062424}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1166.3624, y: 546.1385, z: -194.20859}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &816869638
 GameObject:
   m_ObjectHideFlags: 0
@@ -7147,9 +7219,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 860460354}
-  - component: {fileID: 860460357}
-  - component: {fileID: 860460356}
-  - component: {fileID: 860460355}
+  - component: {fileID: 860460360}
+  - component: {fileID: 860460359}
+  - component: {fileID: 860460358}
   m_Layer: 0
   m_Name: Settings
   m_TagString: Untagged
@@ -7172,7 +7244,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 80204551}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &860460355
+--- !u!114 &860460358
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7181,12 +7253,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 860460353}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd8dcd80206801a4fa8878290857117b, type: 3}
+  m_Script: {fileID: 11500000, guid: 194b6f1198ede4b4a90c0a0a9132920a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldMoisture: 1
   worldMoistureDropdown: {fileID: 1142233728}
---- !u!114 &860460356
+--- !u!114 &860460359
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7195,15 +7266,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 860460353}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e7a579b726e52742974581ee616794c, type: 3}
+  m_Script: {fileID: 11500000, guid: 770ee9414f6347c4e8d4e6302cff4678, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldTempType: 0
-  worldTemperature: 1
   worldTempTypeDropdown: {fileID: 970621315}
   worldTemperatureDropdown: {fileID: 522873858}
   equatorWidthPercentDropdown: {fileID: 162595167}
---- !u!114 &860460357
+--- !u!114 &860460360
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7212,16 +7281,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 860460353}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f417460ef08a1704981048dae654e137, type: 3}
+  m_Script: {fileID: 11500000, guid: af15fee43f24b69469eb6f61d6e3c137, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldName: New World
-  width: 256
-  length: 256
-  height: 32
-  primaryChunkSize: 256
-  chunkSize: 16
-  worldType: 0
   heightDropdown: {fileID: 840443565}
   primaryChunkSizeDropdown: {fileID: 542082104}
   ChunkSizeDropdown: {fileID: 847289917}
@@ -20041,3 +20103,4 @@ SceneRoots:
   - {fileID: 1124580533}
   - {fileID: 2034012963}
   - {fileID: 486808305}
+  - {fileID: 801062426}

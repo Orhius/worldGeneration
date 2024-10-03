@@ -3,10 +3,30 @@ using System.Collections.Generic;
 [Serializable]
 public class WorldData
 {
-    public string worldName = "New world";
-    public string worldPath = string.Empty;
-    public string worldFileName = string.Empty;
-    public DateTime creationTime = new();
+    private string worldName = "New world";
+    public string WorldName
+    {
+        get { return worldName; }
+        set { worldName = value; }
+    }
+    private string worldPath = string.Empty;
+    public string WorldPath
+    {
+        get { return worldPath; }
+        set { worldPath = value; }
+    }
+    private string worldFileName = string.Empty;
+    public string WorldFileName
+    {
+        get { return worldFileName; }
+        set { worldFileName = value; }
+    }
+    private DateTime creationTime = new();
+    public DateTime CreationTime
+    {
+        get { return creationTime; }
+        set { creationTime = value; }
+    }
 
     public List<Chunk> chunksLoaded = new List<Chunk>();
 
@@ -22,18 +42,5 @@ public class WorldData
         creationTime = this.creationTime;
         chunksLoaded = this.chunksLoaded;
 
-    }
-    public object Clone()
-    {
-        var clone = new WorldData
-        {
-            worldName = worldName,
-            worldPath = worldPath,
-            worldFileName = worldFileName,
-            creationTime = creationTime,
-            chunksLoaded = chunksLoaded
-
-        };
-        return clone;
     }
 }

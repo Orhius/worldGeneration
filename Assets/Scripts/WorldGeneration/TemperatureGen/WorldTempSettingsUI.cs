@@ -8,7 +8,7 @@ using UnityEngine;
 public class WorldTempSettingsUI : MonoBehaviour
 {
     [Header("temp gen")]
-    [SerializeField] private WorldTempSettings worldTempSettings;
+    public WorldTempSettings worldTempSettings { private set; get; } = new();
 
     private readonly Dictionary<int, string> equatorWidthDictionary = new Dictionary<int, string>()
     {
