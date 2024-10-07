@@ -69,17 +69,17 @@
     <Compile Include="Assets\Scripts\WorldGeneration\GlobalGenSettings\WorldSettings.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\MoistureGen\WorldMoistureSettingsUI.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\MapGen\TextureGenerator.cs" />
-    <Compile Include="Assets\Scripts\WorldGeneration\TemperatureGen\WorldTempSettingsUI.cs" />
-    <Compile Include="Assets\Scripts\WorldGeneration\TemperatureGen\WorldTempSettings.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\SimplexNoise\SimplexNoise.cs" />
     <Compile Include="Assets\Scripts\Worlds\WorldObject.cs" />
     <Compile Include="Assets\Scripts\Worlds\WorldGenerator.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\BasicTypes\Tile.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\BasicTypes\Chunk.cs" />
+    <Compile Include="Assets\Scripts\WorldGeneration\TemperatureGen\WorldTemperatureSettings.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\HeightGen\GlobalWorldGenSettingsUI.cs" />
     <Compile Include="Assets\Scripts\Helpers\ObjectSpawner.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\MoistureGen\WorldMoistureSettings.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\RiversGen\RiversGenerator.cs" />
+    <Compile Include="Assets\Scripts\WorldGeneration\TemperatureGen\WorldTemperatureSettingsUI.cs" />
     <Compile Include="Assets\Scripts\Worlds\WorldData.cs" />
     <Compile Include="Assets\Scripts\Worlds\WorldsManager.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\GlobalGenSettings\Generator.cs" />
@@ -1067,6 +1067,10 @@
       <HintPath>Library\ScriptAssemblies\Unity.TestTools.CodeCoverage.Editor.OpenCover.Model.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="com.unity.cinemachine.editor">
+      <HintPath>Library\ScriptAssemblies\com.unity.cinemachine.editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.PlasticSCM.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.PlasticSCM.Editor.dll</HintPath>
       <Private>False</Private>
@@ -1077,6 +1081,10 @@
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.VisualScripting.SettingsProvider.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEditor.UI">
@@ -1155,8 +1163,8 @@
       <HintPath>Library\ScriptAssemblies\Unity.Mathematics.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.VisualScripting.SettingsProvider.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
+    <Reference Include="Cinemachine">
+      <HintPath>Library\ScriptAssemblies\Cinemachine.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

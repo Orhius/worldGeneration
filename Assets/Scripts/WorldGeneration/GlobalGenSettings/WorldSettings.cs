@@ -4,14 +4,14 @@ using System;
 public class WorldSettings
 {
     public GlobalWorldGenSettings globalWorldGenSettings;
-    public WorldTempSettings worldTempSettings;
+    public WorldTemperatureSettings worldTempSettings;
     public WorldMoistureSettings worldMoistureSettings;
 
     public WorldSettings()
     {
     }
 
-    public WorldSettings(GlobalWorldGenSettings globalWorldGenSettings, WorldTempSettings worldTempSettings, WorldMoistureSettings worldMoistureSettings)
+    public WorldSettings(GlobalWorldGenSettings globalWorldGenSettings, WorldTemperatureSettings worldTempSettings, WorldMoistureSettings worldMoistureSettings)
     {
         this.globalWorldGenSettings = globalWorldGenSettings;
         this.worldTempSettings = worldTempSettings;

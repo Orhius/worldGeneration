@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public class WorldTempSettings
+public class WorldTemperatureSettings
 {
     public WorldTemperatureType worldTempType = WorldTemperatureType.realistic;
     public WorldTemperature worldTemperature = WorldTemperature.normal;

@@ -8,7 +8,7 @@ public class WorldConfigurator : MonoBehaviour
     public static event Action<World> OnWorldCreated;
 
     [SerializeField] private GlobalWorldGenSettingsUI globalWorldGenSettingsUI;
-    [SerializeField] private WorldTempSettingsUI worldTempSettingsUI;
+    [SerializeField] private WorldTemperatureSettingsUI worldTempSettingsUI;
     [SerializeField] private WorldMoistureSettingsUI worldMoistureSettingsUI;
     public void ResetSettings()
     {

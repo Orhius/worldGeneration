@@ -1,14 +1,13 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public class WorldTempSettingsUI : MonoBehaviour
+public class WorldTemperatureSettingsUI : MonoBehaviour
 {
     [Header("temp gen")]
-    public WorldTempSettings worldTempSettings { private set; get; } = new();
+    public WorldTemperatureSettings worldTempSettings { private set; get; } = new();
 
     private readonly Dictionary<int, string> equatorWidthDictionary = new Dictionary<int, string>()
     {
