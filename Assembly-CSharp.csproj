@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\Worlds\World.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\SimplexNoise\SimplexNoiseGenerator.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\TemperatureGen\EquatorWidthChanger.cs" />
+    <Compile Include="Assets\Scripts\GlobalEvents\GlobalEventManager.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\GlobalGenSettings\WorldSettings.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\MoistureGen\WorldMoistureSettingsUI.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\MapGen\TextureGenerator.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Assets\Scripts\WorldGeneration\BasicTypes\Chunk.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\TemperatureGen\WorldTemperatureSettings.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\HeightGen\GlobalWorldGenSettingsUI.cs" />
+    <Compile Include="Assets\Scripts\WorldRendering\ChunkRenderer.cs" />
     <Compile Include="Assets\Scripts\Helpers\ObjectSpawner.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\MoistureGen\WorldMoistureSettings.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\RiversGen\RiversGenerator.cs" />

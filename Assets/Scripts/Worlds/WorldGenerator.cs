@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class WorldGenerator : MonoBehaviour
 {
-    public World currentWorld = new World();
+    public static World currentWorld = new World();
     [SerializeField] private string GameSceneName = "GameScene";
 
     public static event Action<World> OnStartWorldGeneratorLoad;
@@ -30,6 +30,7 @@ public class WorldGenerator : MonoBehaviour
         currentWorld = new World(thisWorld.settings, thisWorld.data);
 
         SceneManager.LoadScene(GameSceneName);
-        Debug.Log("waaaaaaaaaaaaagh");
+
+        GlobalEventManager.WorldSceneIsLoaded();
     }
 }
