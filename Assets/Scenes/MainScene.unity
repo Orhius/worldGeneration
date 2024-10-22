@@ -6522,23 +6522,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 191e46564a56182479c010fbc3b8ef58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentWorld:
-    settings:
-      globalWorldGenSettings:
-        worldName: New world
-        width: 256
-        length: 256
-        height: 32
-        primaryChunkSize: 256
-        chunkSize: 16
-        seed: 0
-        worldType: 0
-      worldTempSettings:
-        worldTempType: 0
-        worldTemperature: 1
-      worldMoistureSettings:
-        worldMoisture: 1
   GameSceneName: GameScene
+  chunkObject: {fileID: 4677647385451056019, guid: d32699e46d28a7f4a9ee0d1921871165, type: 3}
+  noiseSettings:
+  - type: 1
+    friquency: 0.01
+    amplitude: 40
+  - type: 2
+    friquency: 0.05
+    amplitude: -10
+  - type: 3
+    friquency: 0.1
+    amplitude: 4
 --- !u!4 &801062426
 Transform:
   m_ObjectHideFlags: 0
@@ -6548,7 +6543,7 @@ Transform:
   m_GameObject: {fileID: 801062424}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1166.3624, y: 546.1385, z: -194.20859}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

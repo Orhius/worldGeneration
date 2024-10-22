@@ -61,16 +61,18 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2023.2.18f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\WorldGeneration\SimplexNoise\OldNoise\SimplexNoiseGenerator.cs" />
+    <Compile Include="Assets\Scripts\WorldGeneration\SimplexNoise\FastNoiseSettings.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\HeightGen\GlobalWorldGenSettings.cs" />
+    <Compile Include="Assets\Scripts\WorldGeneration\SimplexNoise\FastNoiseLite.cs" />
     <Compile Include="Assets\Scripts\Worlds\WorldConfigurator.cs" />
     <Compile Include="Assets\Scripts\Worlds\World.cs" />
-    <Compile Include="Assets\Scripts\WorldGeneration\SimplexNoise\SimplexNoiseGenerator.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\TemperatureGen\EquatorWidthChanger.cs" />
     <Compile Include="Assets\Scripts\GlobalEvents\GlobalEventManager.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\GlobalGenSettings\WorldSettings.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\MoistureGen\WorldMoistureSettingsUI.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\MapGen\TextureGenerator.cs" />
-    <Compile Include="Assets\Scripts\WorldGeneration\SimplexNoise\SimplexNoise.cs" />
+    <Compile Include="Assets\Scripts\WorldGeneration\SimplexNoise\OldNoise\SimplexNoise.cs" />
     <Compile Include="Assets\Scripts\Worlds\WorldObject.cs" />
     <Compile Include="Assets\Scripts\Worlds\WorldGenerator.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\BasicTypes\Tile.cs" />
@@ -86,6 +88,7 @@
     <Compile Include="Assets\Scripts\Worlds\WorldsManager.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\GlobalGenSettings\Generator.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\BasicTypes\River.cs" />
+    <Compile Include="Assets\Scripts\WorldGeneration\BasicTypes\BlockData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

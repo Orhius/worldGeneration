@@ -10,7 +10,7 @@ public class GlobalWorldGenSettingsUI : MonoBehaviour
     [Header("world gen")]
     public GlobalWorldGenSettings globalWorldGenSettings { private set; get; } = new();
 
-    private List<int> heighthList = new List<int>() { 16, 32, 64 };
+    private List<int> heighthList = new List<int>() { 16, 32, 64, 128, 256, 512 };
     private readonly List<ushort> primaryChunkSizeList = new List<ushort>() { 128, 256 };
     private readonly List<byte> chunkSizeList = new List<byte>() { 16, 32 };
 
