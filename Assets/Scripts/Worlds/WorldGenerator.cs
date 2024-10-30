@@ -10,6 +10,8 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField] private Chunk chunkObject;
 
     [SerializeField] private List<FastNoiseSettings> noiseSettings = new List<FastNoiseSettings>();
+    [SerializeField] private FastNoiseSettings warpNoiseSettings;
+
     private static List<FastNoiseLite> noiseOctaves = new List<FastNoiseLite>();
     private static List<float> noiseAmplitude = new List<float>();
 
@@ -19,6 +21,7 @@ public class WorldGenerator : MonoBehaviour
 
     public static SimplexNoise.Layer noiseHeigthLayer = new();
     public static FastNoiseLite noiseLite = new FastNoiseLite();
+    public static FastNoiseLite warpNoiseLite = new FastNoiseLite();
 
 
     public static event Action<World> OnStartWorldGeneratorLoad;
@@ -47,6 +50,9 @@ public class WorldGenerator : MonoBehaviour
             noiseOctaves[i].SetFrequency(noiseSettings[i].friquency);
             noiseAmplitude.Add(noiseSettings[i].amplitude);
         }
+        warpNoiseLite.SetNoiseType(warpNoiseSettings.type);
+        warpNoiseLite.SetFrequency(warpNoiseSettings.friquency);
+        warpNoiseLite.SetDomainWarpAmp(warpNoiseSettings.amplitude);
     }
     public static void StartWorldGeneratorLoad(World world)
     {
@@ -79,17 +85,16 @@ public class WorldGenerator : MonoBehaviour
 
     public static float GenerateHeight(float x, float y)
     {
-        float noise = (float)baseChunkHeight;
+        x += currentWorld.settings.globalWorldGenSettings.seed;
+        y += currentWorld.settings.globalWorldGenSettings.seed;
+        warpNoiseLite.DomainWarp(ref x, ref y);
 
+        float noise = (float)baseChunkHeight;
         for (int i = 0; i < noiseOctaves.Count; i++)
         {
             float noiseOctave = noiseOctaves[i].GetNoise(x, y);
             noise += noiseOctave * noiseAmplitude[i];
         }
-        //Vector3 offsetVector = new Vector3(x, 0, y);
-        //noiseHeigthLayer.offset = offsetVector;
-        //Vector3 v = new Vector3(0, 0, 0);
-        //float noise = SimplexNoise.GenerateValue(noiseHeigthLayer, v);
         return noise;
     }
 }

@@ -6525,15 +6525,19 @@ MonoBehaviour:
   GameSceneName: GameScene
   chunkObject: {fileID: 4677647385451056019, guid: d32699e46d28a7f4a9ee0d1921871165, type: 3}
   noiseSettings:
-  - type: 1
-    friquency: 0.01
-    amplitude: 40
-  - type: 2
-    friquency: 0.05
-    amplitude: -10
+  - type: 0
+    friquency: 0.25
+    amplitude: 0.5
+  - type: 0
+    friquency: 0.0333
+    amplitude: 10
   - type: 3
-    friquency: 0.1
-    amplitude: 4
+    friquency: 0.04
+    amplitude: 3
+  warpNoiseSettings:
+    type: 0
+    friquency: 0.06
+    amplitude: 25
 --- !u!4 &801062426
 Transform:
   m_ObjectHideFlags: 0
