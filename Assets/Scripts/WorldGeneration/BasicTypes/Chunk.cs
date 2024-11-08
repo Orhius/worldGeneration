@@ -1,22 +1,22 @@
+using System;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
-
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
+[Serializable]
 public class Chunk : MonoBehaviour
 {
     public BlockData[,,] blocks = new BlockData[WorldGenerator.chunkSize, WorldGenerator.chunkHeight, WorldGenerator.chunkSize];
-    public int x, y;
+    public Vector2Int position = new Vector2Int();
 
     private List<Vector3> vertices = new();
     private List<int> triangles = new();
 
     public SimplexNoise.Layer noiseHeigthLayer;
 
-    public void Start()
+    public void InitChunk()
     {
-        x = (int)transform.position.x;
-        y = (int)transform.position.z;
+        position.x = (int)transform.position.x;
+        position.y = (int)transform.position.z;
         for (int x = 0; x < WorldGenerator.chunkSize; x++)
         {
             for (int y = 0; y < WorldGenerator.chunkHeight; y++)
@@ -28,9 +28,7 @@ public class Chunk : MonoBehaviour
             }
         }
 
-
-        GenerateHeight(new Vector2Int(x, y));
-        GenerateChunk();
+        GenerateHeight(position);
     }
 
     public void GenerateHeight(Vector2Int pos)
@@ -49,11 +47,9 @@ public class Chunk : MonoBehaviour
                 }
                 else
                 {
+                    for (int z = 0; z < WorldGenerator.chunkHeight; z++)
                     {
-                        for (int z = 0; z < WorldGenerator.chunkHeight; z++)
-                        {
-                            blocks[x, z, y].blockType = BlockType.Surface;
-                        }
+                        blocks[x, z, y].blockType = BlockType.Surface;
                     }
                 }
             }
@@ -175,7 +171,43 @@ public class Chunk : MonoBehaviour
         }
         else
         {
-            return BlockType.Air;
+            Vector2Int nextChunkPos = new Vector2Int(position.x / WorldGenerator.chunkSize, position.y / WorldGenerator.chunkSize);
+
+            if (coordinates.y >= WorldGenerator.chunkHeight) return BlockType.Air;
+            else if(coordinates.y < 0) return BlockType.Surface;
+
+
+            if (coordinates.x < 0)
+            {
+                nextChunkPos.x--;
+                coordinates.x = WorldGenerator.chunkSize - 1;
+            }
+            else if (coordinates.x >= WorldGenerator.chunkSize)
+            {
+                nextChunkPos.x++;
+                coordinates.x = 0;
+            }
+
+            if (coordinates.z < 0)
+            {
+                nextChunkPos.y--;
+                coordinates.z = WorldGenerator.chunkSize - 1;
+            }
+            else if(coordinates.z >= WorldGenerator.chunkSize)
+            {
+                nextChunkPos.y++;
+                coordinates.z = 0;
+            }
+
+            if (WorldGenerator.ChunkData.TryGetValue(nextChunkPos, out Chunk nextChunk))
+            {
+                return nextChunk.blocks[coordinates.x, coordinates.y, coordinates.z].blockType;
+
+            }
+            else
+            {
+                return BlockType.Air;
+            }
         }
     }
     #endregion

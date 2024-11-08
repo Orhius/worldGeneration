@@ -1,16 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 public class WorldGenerator : MonoBehaviour
 {
     public static World currentWorld = new World();
     [SerializeField] private string GameSceneName = "GameScene";
-    [SerializeField] private Dictionary<Vector2Int, Chunk> ChunkData = new();
     [SerializeField] private Chunk chunkObject;
 
     [SerializeField] private List<FastNoiseSettings> noiseSettings = new List<FastNoiseSettings>();
     [SerializeField] private FastNoiseSettings warpNoiseSettings;
+
+    public static Dictionary<Vector2Int, Chunk> ChunkData = new();
 
     private static List<FastNoiseLite> noiseOctaves = new List<FastNoiseLite>();
     private static List<float> noiseAmplitude = new List<float>();
@@ -18,6 +20,7 @@ public class WorldGenerator : MonoBehaviour
     public static int chunkSize = 16;
     public static int chunkHeight = 128;
     public static int baseChunkHeight = chunkHeight/2;
+    public static int chunkRenderingDistance = 8;
 
     public static SimplexNoise.Layer noiseHeigthLayer = new();
     public static FastNoiseLite noiseLite = new FastNoiseLite();
@@ -31,6 +34,7 @@ public class WorldGenerator : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         OnStartWorldGeneratorLoad += LoadGameScene;
         GlobalEventManager.OnWorldSceneIsLoaded += StartWorldGeneration;
+        GlobalEventManager.OnPlayerChunkPositionChanged += GenerateChunks;
 
         noiseLite.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
     }
@@ -38,6 +42,7 @@ public class WorldGenerator : MonoBehaviour
     {
         OnStartWorldGeneratorLoad -= LoadGameScene;
         GlobalEventManager.OnWorldSceneIsLoaded -= StartWorldGeneration;
+        GlobalEventManager.OnPlayerChunkPositionChanged += GenerateChunks;
 
     }
     private void Awake()
@@ -65,6 +70,7 @@ public class WorldGenerator : MonoBehaviour
         currentWorld = new World(thisWorld.settings, thisWorld.data);
         chunkSize = currentWorld.settings.globalWorldGenSettings.chunkSize;
         chunkHeight = currentWorld.settings.globalWorldGenSettings.height;
+        chunkRenderingDistance = currentWorld.settings.globalWorldGenSettings.chunkRenderingDistance;
 
         SceneManager.LoadScene(GameSceneName);
 
@@ -73,13 +79,27 @@ public class WorldGenerator : MonoBehaviour
 
     private void StartWorldGeneration()
     {
-        for (int x = 0; x < 10; x++)
+        GenerateChunks(Vector2Int.zero);
+    }
+    private void GenerateChunks(Vector2Int vector)
+    {
+        for (int x = -chunkRenderingDistance/2; x < chunkRenderingDistance/2; x++)
         {
-            for (int z = 0; z < 10; z++)
+            for (int z = -chunkRenderingDistance / 2; z < chunkRenderingDistance / 2; z++)
             {
-                var chunkObj = Instantiate(chunkObject, new Vector3(x * chunkSize, 0, z * chunkSize), Quaternion.identity, transform);
-                ChunkData.Add(new Vector2Int(x, z), chunkObj);
+                if (!ChunkData.ContainsKey(new Vector2Int(x + vector.x, z + vector.y)))
+                {
+                    var chunkObj = Instantiate(chunkObject, new Vector3((x + vector.x) * chunkSize, 0, (z + vector.y) * chunkSize), Quaternion.identity, transform);
+                    chunkObj.InitChunk();
+                    ChunkData.Add(new Vector2Int(x + vector.x, z + vector.y), chunkObj);
+                }
             }
+        }
+
+
+        foreach (var item in ChunkData)
+        {
+            item.Value.GenerateChunk();
         }
     }
 

@@ -79,6 +79,7 @@
     <Compile Include="Assets\Scripts\WorldGeneration\BasicTypes\Chunk.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\TemperatureGen\WorldTemperatureSettings.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\HeightGen\GlobalWorldGenSettingsUI.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerBehaviour.cs" />
     <Compile Include="Assets\Scripts\WorldRendering\ChunkRenderer.cs" />
     <Compile Include="Assets\Scripts\Helpers\ObjectSpawner.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\MoistureGen\WorldMoistureSettings.cs" />
