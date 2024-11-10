@@ -47,51 +47,25 @@ public class Chunk : MonoBehaviour
 
     public void GenerateHeight()
     {
-        //for (int x = 0; x < WorldGenerator.chunkSize; x++)
-        //{
-        //    for (int y = 0; y < WorldGenerator.chunkSize; y++)
-        //    {
-        //        float height = WorldGenerator.GenerateHeight(position.x + x, position.y + y);
-        //        if (WorldGenerator.chunkHeight > height)
-        //        {
-        //            for (int z = 0; z < height; z++)
-        //            {
-        //                blocks[x, z, y].blockType = BlockType.Surface;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            for (int z = 0; z < WorldGenerator.chunkHeight; z++)
-        //            {
-        //                blocks[x, z, y].blockType = BlockType.Surface;
-        //            }
-        //        }
-        //    }
-        //}
-        List<Task> heightTasks = new List<Task>();
-
         for (int x = 0; x < WorldGenerator.chunkSize; x++)
         {
             for (int y = 0; y < WorldGenerator.chunkSize; y++)
             {
-                heightTasks.Add(Task.Run(() =>
+                float height = WorldGenerator.GenerateHeight(position.x + x, position.y + y);
+                if (WorldGenerator.chunkHeight > height)
                 {
-                    float height = WorldGenerator.GenerateHeight(position.x + x, position.y + y);
-                    if (WorldGenerator.chunkHeight > height)
+                    for (int z = 0; z < height; z++)
                     {
-                        for (int z = 0; z < height; z++)
-                        {
-                            blocks[x, z, y].blockType = BlockType.Surface;
-                        }
+                        blocks[x, z, y].blockType = BlockType.Surface;
                     }
-                    else
+                }
+                else
+                {
+                    for (int z = 0; z < WorldGenerator.chunkHeight; z++)
                     {
-                        for (int z = 0; z < WorldGenerator.chunkHeight; z++)
-                        {
-                            blocks[x, z, y].blockType = BlockType.Surface;
-                        }
+                        blocks[x, z, y].blockType = BlockType.Surface;
                     }
-                }));
+                }
             }
         }
     }
