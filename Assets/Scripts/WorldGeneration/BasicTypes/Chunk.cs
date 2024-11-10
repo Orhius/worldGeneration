@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 [Serializable]
@@ -12,6 +13,19 @@ public class Chunk : MonoBehaviour
     private List<int> triangles = new();
 
     public SimplexNoise.Layer noiseHeigthLayer;
+
+    public bool isGenerated = false;
+
+    private event Action OnAllBlockGenerated;
+
+    private void OnEnable()
+    {
+        OnAllBlockGenerated += GenerateChunk;
+    }
+    private void OnDisable()
+    {
+        OnAllBlockGenerated -= GenerateChunk;
+    }
 
     public void InitChunk()
     {
@@ -28,50 +42,83 @@ public class Chunk : MonoBehaviour
             }
         }
 
-        GenerateHeight(position);
+        GenerateHeight();
     }
 
-    public void GenerateHeight(Vector2Int pos)
+    public void GenerateHeight()
     {
+        //for (int x = 0; x < WorldGenerator.chunkSize; x++)
+        //{
+        //    for (int y = 0; y < WorldGenerator.chunkSize; y++)
+        //    {
+        //        float height = WorldGenerator.GenerateHeight(position.x + x, position.y + y);
+        //        if (WorldGenerator.chunkHeight > height)
+        //        {
+        //            for (int z = 0; z < height; z++)
+        //            {
+        //                blocks[x, z, y].blockType = BlockType.Surface;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            for (int z = 0; z < WorldGenerator.chunkHeight; z++)
+        //            {
+        //                blocks[x, z, y].blockType = BlockType.Surface;
+        //            }
+        //        }
+        //    }
+        //}
+        List<Task> heightTasks = new List<Task>();
+
         for (int x = 0; x < WorldGenerator.chunkSize; x++)
         {
             for (int y = 0; y < WorldGenerator.chunkSize; y++)
             {
-                float height = WorldGenerator.GenerateHeight(pos.x + x, pos.y + y);
-                if (WorldGenerator.chunkHeight > height)
+                heightTasks.Add(Task.Run(() =>
                 {
-                    for (int z = 0; z < height; z++)
+                    float height = WorldGenerator.GenerateHeight(position.x + x, position.y + y);
+                    if (WorldGenerator.chunkHeight > height)
                     {
-                        blocks[x, z, y].blockType = BlockType.Surface;
+                        for (int z = 0; z < height; z++)
+                        {
+                            blocks[x, z, y].blockType = BlockType.Surface;
+                        }
                     }
-                }
-                else
-                {
-                    for (int z = 0; z < WorldGenerator.chunkHeight; z++)
+                    else
                     {
-                        blocks[x, z, y].blockType = BlockType.Surface;
+                        for (int z = 0; z < WorldGenerator.chunkHeight; z++)
+                        {
+                            blocks[x, z, y].blockType = BlockType.Surface;
+                        }
                     }
-                }
+                }));
             }
         }
     }
-
     #region Chunk Rendering
-    public void GenerateChunk()
-    {
-        Mesh chunkMesh = new();
-        MeshFilter meshFilter = GetComponent<MeshFilter>();
 
-        for (int x = 0; x < WorldGenerator.chunkSize; x++)
+    public Task GenerateChunkMesh()
+    {
+        return Task.Factory.StartNew(() =>
         {
-            for (int y = 0; y < WorldGenerator.chunkHeight; y++)
+            for (int x = 0; x < WorldGenerator.chunkSize; x++)
             {
-                for (int z = 0; z < WorldGenerator.chunkSize; z++)
+                for (int y = 0; y < WorldGenerator.chunkHeight; y++)
                 {
-                    GenerateBlock(new Vector3Int(x, y, z));
+                    for (int z = 0; z < WorldGenerator.chunkSize; z++)
+                    {
+                        GenerateBlock(new Vector3Int(x, y, z));
+                    }
                 }
             }
-        }
+            isGenerated = true;
+            //OnAllBlockGenerated?.Invoke();
+        }, TaskCreationOptions.LongRunning);
+    }
+    public void GenerateChunk()
+    {
+        Mesh chunkMesh = new Mesh();
+        MeshFilter meshFilter = GetComponent<MeshFilter>();
 
         chunkMesh.vertices = vertices.ToArray();
         chunkMesh.triangles = triangles.ToArray();
@@ -202,7 +249,6 @@ public class Chunk : MonoBehaviour
             if (WorldGenerator.ChunkData.TryGetValue(nextChunkPos, out Chunk nextChunk))
             {
                 return nextChunk.blocks[coordinates.x, coordinates.y, coordinates.z].blockType;
-
             }
             else
             {
@@ -213,4 +259,14 @@ public class Chunk : MonoBehaviour
     #endregion
 
     #endregion
+}
+public struct MeshVertex
+{
+    public Vector3 position;
+    public sbyte normalX, normalY, normalZ, normalW;
+}
+public class ChunkMeshData
+{
+    public MeshVertex[] vertices;
+    public Bounds bounds;
 }
