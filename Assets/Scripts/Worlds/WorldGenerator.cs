@@ -24,7 +24,7 @@ public class WorldGenerator : MonoBehaviour
     public static int chunkSize = 16;
     public static int chunkHeight = 128;
     public static int baseChunkHeight = chunkHeight/2;
-    public static byte chunkRenderingDistance = 8;
+    public static byte chunkRenderingDistance = 32;
 
     public static SimplexNoise.Layer noiseHeigthLayer = new();
     public static FastNoiseLite noiseLite = new FastNoiseLite();
@@ -108,7 +108,7 @@ public class WorldGenerator : MonoBehaviour
 
                 if (!ChunkData.ContainsKey(new Vector2Int(x + vector.x, z + vector.y)))
                 {
-                    yield return new WaitForSecondsRealtime(0.0001f);
+                    yield return new WaitForSecondsRealtime(0.0333f);
 
                     chunkObj.InitChunk();
                     tasks.Add(chunkObj.GenerateChunkMesh());
