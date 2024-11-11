@@ -6,7 +6,7 @@ public class GlobalWorldGenSettings
 {
     [Header("global")]
     public string worldName = "New world";
-    public int chunkRenderingDistance = 8;
+    public byte chunkRenderingDistance = 8;
     [Header("world gen")]
     public ulong width = 256;
     public ulong Width

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Unity.Burst;
 using UnityEngine;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 [Serializable]
@@ -26,7 +27,7 @@ public class Chunk : MonoBehaviour
     {
         OnAllBlockGenerated -= GenerateChunk;
     }
-
+    [BurstCompile]
     public void InitChunk()
     {
         position.x = (int)transform.position.x;
@@ -44,7 +45,7 @@ public class Chunk : MonoBehaviour
 
         GenerateHeight();
     }
-
+    [BurstCompile]
     public void GenerateHeight()
     {
         for (int x = 0; x < WorldGenerator.chunkSize; x++)
@@ -70,7 +71,7 @@ public class Chunk : MonoBehaviour
         }
     }
     #region Chunk Rendering
-
+    [BurstCompile]
     public Task GenerateChunkMesh()
     {
         return Task.Factory.StartNew(() =>
