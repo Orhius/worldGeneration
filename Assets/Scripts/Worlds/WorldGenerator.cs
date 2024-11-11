@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Unity.Burst;
 using UnityEngine;
@@ -39,7 +40,6 @@ public class WorldGenerator : MonoBehaviour
     {
         DontDestroyOnLoad(gameObject);
         OnStartWorldGeneratorLoad += LoadGameScene;
-        GlobalEventManager.OnWorldSceneIsLoaded += StartWorldGeneration;
         GlobalEventManager.OnPlayerChunkPositionChanged += GenerateChunks;
 
         noiseLite.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
@@ -47,7 +47,6 @@ public class WorldGenerator : MonoBehaviour
     private void OnDisable()
     {
         OnStartWorldGeneratorLoad -= LoadGameScene;
-        GlobalEventManager.OnWorldSceneIsLoaded -= StartWorldGeneration;
         GlobalEventManager.OnPlayerChunkPositionChanged += GenerateChunks;
 
     }
@@ -89,44 +88,9 @@ public class WorldGenerator : MonoBehaviour
 
         GlobalEventManager.WorldSceneIsLoaded();
     }
-
-    private void StartWorldGeneration()
-    {
-        //GenerateChunks(Vector2Int.zero);
-    }
     [BurstCompile]
     private void GenerateChunks(Vector2Int vector)
     {
-        //List<Task> tasks = new List<Task>();
-        //for (int x = -chunkRenderingDistance / 2 - 1; x < chunkRenderingDistance / 2 + 1; x++)
-        //{
-        //    for (int z = -chunkRenderingDistance / 2 - 1; z < chunkRenderingDistance / 2 + 1; z++)
-        //    {
-        //        var chunkObj = Instantiate(chunkObject, new Vector3((x + vector.x) * chunkSize, 0, (z + vector.y) * chunkSize), Quaternion.identity, transform);
-
-        //        if (!ChunkData.ContainsKey(new Vector2Int(x + vector.x, z + vector.y)))
-        //        {
-        //            chunkObj.InitChunk();
-        //            ChunkData.Add(new Vector2Int(x + vector.x, z + vector.y), chunkObj);
-        //        }
-        //    }
-        //}
-        //for (int x = -chunkRenderingDistance / 2; x < chunkRenderingDistance / 2; x++)
-        //{
-        //    for (int z = -chunkRenderingDistance / 2; z < chunkRenderingDistance / 2; z++)
-        //    {
-
-        //        ChunkData.TryGetValue(new Vector2Int(x + vector.x, z + vector.y), out Chunk chunk);
-
-        //        //if (!chunk.isGenerated) chunk.GenerateChunkMesh();
-        //        tasks.Add(chunk.GenerateChunkMesh());
-        //        ChunksMeshQueue.Enqueue(chunk);
-        //    }
-        //}
-        //while (tasks.Count > 0)
-        //{
-        //    tasks.RemoveAll(t => t.IsCompleted);
-        //}
         if (isGenerating) { return; }
         isGenerating = true;
         StartCoroutine(GenerateChunksCoroutine(vector));
@@ -135,6 +99,7 @@ public class WorldGenerator : MonoBehaviour
     private IEnumerator GenerateChunksCoroutine(Vector2Int vector)
     {
         List<Task> tasks = new List<Task>();
+        List<Vector2Int> newChunkData = new();
         for (int x = -chunkRenderingDistance / 2 - 1; x < chunkRenderingDistance / 2 + 1; x++)
         {
             for (int z = -chunkRenderingDistance / 2 - 1; z < chunkRenderingDistance / 2 + 1; z++)
@@ -146,23 +111,36 @@ public class WorldGenerator : MonoBehaviour
                     yield return new WaitForSecondsRealtime(0.0001f);
 
                     chunkObj.InitChunk();
-                    ChunkData.TryAdd(new Vector2Int(x + vector.x, z + vector.y), chunkObj);
+                    tasks.Add(chunkObj.GenerateChunkMesh());
+                    ChunksMeshQueue.Enqueue(chunkObj);
+                    ChunkData.Add(new Vector2Int(x + vector.x, z + vector.y), chunkObj);
+                    newChunkData.Add(new Vector2Int(x + vector.x, z + vector.y));
 
+                }
+                else
+                {
+                    newChunkData.Add(new Vector2Int(x + vector.x, z + vector.y));
                 }
             }
         }
-        for (int x = -chunkRenderingDistance / 2; x < chunkRenderingDistance / 2; x++)
+        foreach (var item in ChunkData.Keys.Except(newChunkData).ToList())
         {
-            for (int z = -chunkRenderingDistance / 2; z < chunkRenderingDistance / 2; z++)
-            {
-                yield return new WaitForSecondsRealtime(0.0001f);
-
-                ChunkData.TryGetValue(new Vector2Int(x + vector.x, z + vector.y), out Chunk chunk);
-
-                tasks.Add(chunk.GenerateChunkMesh());
-                ChunksMeshQueue.Enqueue(chunk);
-            }
+            Destroy(ChunkData[item].gameObject);
+            ChunkData.Remove(item);
         }
+        newChunkData.Clear();
+        //for (int x = -chunkRenderingDistance / 2; x < chunkRenderingDistance / 2; x++)
+        //{
+        //    for (int z = -chunkRenderingDistance / 2; z < chunkRenderingDistance / 2; z++)
+        //    {
+        //        yield return new WaitForSecondsRealtime(0.0001f);
+
+        //        ChunkData.TryGetValue(new Vector2Int(x + vector.x, z + vector.y), out Chunk chunk);
+
+        //        tasks.Add(chunk.GenerateChunkMesh());
+        //        ChunksMeshQueue.Enqueue(chunk);
+        //    }
+        //}
         while (tasks.Count > 0)
         {
             tasks.RemoveAll(t => t.IsCompleted);
