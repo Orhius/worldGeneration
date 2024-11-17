@@ -1,19 +1,17 @@
-using System.Collections.Generic;
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Jobs;
 using UnityEngine;
 
-[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
-public class ChunkRenderer : MonoBehaviour
+[BurstCompile]
+public struct ChunkGenerationJob : IJob
 {
-    public Chunk chunk;
-
-    private List<Vector3> vertices = new();
-    private List<int> triangles = new();
-
-    public void GenerateChunk()
+    public NativeArray<BlockData> blocks;
+    public Vector2Int position;
+    public NativeList<Vector3> vertices;
+    public NativeList<int> triangles;
+    void IJob.Execute()
     {
-        Mesh chunkMesh = new();
-        MeshFilter meshFilter = GetComponent<MeshFilter>();
-
         for (int x = 0; x < WorldGenerator.chunkSize; x++)
         {
             for (int y = 0; y < WorldGenerator.chunkHeight; y++)
@@ -24,17 +22,7 @@ public class ChunkRenderer : MonoBehaviour
                 }
             }
         }
-
-        chunkMesh.vertices = vertices.ToArray();
-        chunkMesh.triangles = triangles.ToArray();
-
-        chunkMesh.Optimize();
-        chunkMesh.RecalculateBounds();
-        chunkMesh.RecalculateNormals();
-
-        meshFilter.mesh = chunkMesh;
     }
-
     #region Block Gen
     private void GenerateBlock(Vector3Int coordinates)
     {
@@ -45,7 +33,7 @@ public class ChunkRenderer : MonoBehaviour
         if (GetBlock(coordinates + Vector3Int.back) == BlockType.Air) GenerateFrontSide(coordinates);
         if (GetBlock(coordinates + Vector3Int.forward) == BlockType.Air) GenerateBackSide(coordinates);
         if (GetBlock(coordinates + Vector3Int.up) == BlockType.Air) GenerateUpSide(coordinates);
-        if (GetBlock(coordinates + Vector3Int.down) == BlockType.Air) GenerateBottomSide(coordinates); 
+        if (GetBlock(coordinates + Vector3Int.down) == BlockType.Air) GenerateBottomSide(coordinates);
     }
     private void GenerateRightSide(Vector3Int coordinates)
     {
@@ -53,7 +41,7 @@ public class ChunkRenderer : MonoBehaviour
         vertices.Add(new Vector3(1, 1, 0) + coordinates);
         vertices.Add(new Vector3(1, 0, 1) + coordinates);
         vertices.Add(new Vector3(1, 1, 1) + coordinates);
-   
+
 
         AddLastVertices();
     }
@@ -104,13 +92,18 @@ public class ChunkRenderer : MonoBehaviour
     }
     private void AddLastVertices()
     {
-        triangles.Add(vertices.Count - 4);
-        triangles.Add(vertices.Count - 3);
-        triangles.Add(vertices.Count - 2);
+        if (vertices.Length < 4)
+        {
+            Debug.LogError("Not enough vertices to form a triangle!");
+            return;
+        }
+        triangles.Add(vertices.Length - 4);
+        triangles.Add(vertices.Length - 3);
+        triangles.Add(vertices.Length - 2);
 
-        triangles.Add(vertices.Count - 3);
-        triangles.Add(vertices.Count - 1);
-        triangles.Add(vertices.Count - 2);
+        triangles.Add(vertices.Length - 3);
+        triangles.Add(vertices.Length - 1);
+        triangles.Add(vertices.Length - 2);
     }
 
     private BlockType GetBlock(Vector3Int coordinates)
@@ -119,13 +112,51 @@ public class ChunkRenderer : MonoBehaviour
             && coordinates.y >= 0 && coordinates.y < WorldGenerator.chunkHeight
             && coordinates.z >= 0 && coordinates.z < WorldGenerator.chunkSize)
         {
-            int index = coordinates.x + coordinates.z * WorldGenerator.chunkSize + coordinates.y * WorldGenerator.chunkHeight;
+            int index = coordinates.x + coordinates.z * WorldGenerator.chunkSize + coordinates.y * WorldGenerator.chunkSize * WorldGenerator.chunkSize;
 
-            return chunk.blocks[index].blockType;
+            return blocks[index].blockType;
         }
         else
         {
-            return BlockType.Air;
+            Vector2Int nextChunkPos = new Vector2Int(position.x / WorldGenerator.chunkSize, position.y / WorldGenerator.chunkSize);
+
+            if (coordinates.y >= WorldGenerator.chunkHeight) return BlockType.Air;
+            else if (coordinates.y < 0) return BlockType.Surface;
+
+
+            if (coordinates.x < 0)
+            {
+                nextChunkPos.x--;
+                coordinates.x = WorldGenerator.chunkSize - 1;
+            }
+            else if (coordinates.x >= WorldGenerator.chunkSize)
+            {
+                nextChunkPos.x++;
+                coordinates.x = 0;
+            }
+
+            if (coordinates.z < 0)
+            {
+                nextChunkPos.y--;
+                coordinates.z = WorldGenerator.chunkSize - 1;
+            }
+            else if (coordinates.z >= WorldGenerator.chunkSize)
+            {
+                nextChunkPos.y++;
+                coordinates.z = 0;
+            }
+
+            if (WorldGenerator.ChunkData.TryGetValue(nextChunkPos, out Chunk nextChunk))
+            {
+
+                int index = coordinates.x + coordinates.z * WorldGenerator.chunkSize + coordinates.y * WorldGenerator.chunkSize * WorldGenerator.chunkSize;
+
+                return BlockType.Air;//nextChunk.blocks[index].blockType;
+            }
+            else
+            {
+                return BlockType.Air;
+            }
         }
     }
     #endregion

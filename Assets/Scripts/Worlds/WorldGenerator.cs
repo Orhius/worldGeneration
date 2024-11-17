@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Unity.Burst;
+using Unity.Jobs;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+[BurstCompile]
 public class WorldGenerator : MonoBehaviour
 {
     public static World currentWorld = new World();
@@ -24,7 +25,7 @@ public class WorldGenerator : MonoBehaviour
     public static int chunkSize = 16;
     public static int chunkHeight = 128;
     public static int baseChunkHeight = chunkHeight/2;
-    public static byte chunkRenderingDistance = 32;
+    public static byte chunkRenderingDistance = 16;
 
     public static SimplexNoise.Layer noiseHeigthLayer = new();
     public static FastNoiseLite noiseLite = new FastNoiseLite();
@@ -88,17 +89,14 @@ public class WorldGenerator : MonoBehaviour
 
         GlobalEventManager.WorldSceneIsLoaded();
     }
-    [BurstCompile]
     private void GenerateChunks(Vector2Int vector)
     {
         if (isGenerating) { return; }
         isGenerating = true;
         StartCoroutine(GenerateChunksCoroutine(vector));
     }
-    [BurstCompile]
     private IEnumerator GenerateChunksCoroutine(Vector2Int vector)
     {
-        List<Task> tasks = new List<Task>();
         List<Vector2Int> newChunkData = new();
         for (int x = -chunkRenderingDistance / 2 - 1; x < chunkRenderingDistance / 2 + 1; x++)
         {
@@ -108,11 +106,9 @@ public class WorldGenerator : MonoBehaviour
 
                 if (!ChunkData.ContainsKey(new Vector2Int(x + vector.x, z + vector.y)))
                 {
-                    yield return new WaitForSecondsRealtime(0.0333f);
+                    yield return new WaitForSecondsRealtime(0.001f);
 
                     chunkObj.InitChunk();
-                    tasks.Add(chunkObj.GenerateChunkMesh());
-                    ChunksMeshQueue.Enqueue(chunkObj);
                     ChunkData.Add(new Vector2Int(x + vector.x, z + vector.y), chunkObj);
                     newChunkData.Add(new Vector2Int(x + vector.x, z + vector.y));
 
@@ -129,26 +125,33 @@ public class WorldGenerator : MonoBehaviour
             ChunkData.Remove(item);
         }
         newChunkData.Clear();
-        //for (int x = -chunkRenderingDistance / 2; x < chunkRenderingDistance / 2; x++)
-        //{
-        //    for (int z = -chunkRenderingDistance / 2; z < chunkRenderingDistance / 2; z++)
-        //    {
-        //        yield return new WaitForSecondsRealtime(0.0001f);
 
-        //        ChunkData.TryGetValue(new Vector2Int(x + vector.x, z + vector.y), out Chunk chunk);
-
-        //        tasks.Add(chunk.GenerateChunkMesh());
-        //        ChunksMeshQueue.Enqueue(chunk);
-        //    }
-        //}
-        while (tasks.Count > 0)
+        for (int x = -chunkRenderingDistance / 2; x < chunkRenderingDistance / 2; x++)
         {
-            tasks.RemoveAll(t => t.IsCompleted);
+            for (int z = -chunkRenderingDistance / 2; z < chunkRenderingDistance / 2; z++)
+            {
+                yield return new WaitForSecondsRealtime(0.0001f);
+
+                ChunkData.TryGetValue(new Vector2Int(x + vector.x, z + vector.y), out Chunk chunk);
+
+                ChunkGenerationJob chunkJob = new ChunkGenerationJob
+                {
+                    blocks = chunk.blocks,
+                    position = chunk.position,
+                    vertices = chunk.vertices,
+                    triangles = chunk.triangles
+                };
+
+                JobHandle handle = chunkJob.Schedule();
+
+                yield return new WaitUntil(() => handle.IsCompleted);
+                handle.Complete();
+
+                ChunksMeshQueue.Enqueue(chunk);
+            }
         }
         isGenerating = false;
     }
-
-    [BurstCompile]
     public static float GenerateHeight(float x, float y)
     {
         x += currentWorld.settings.globalWorldGenSettings.seed;

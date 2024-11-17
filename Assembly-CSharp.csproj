@@ -72,6 +72,7 @@
     <Compile Include="Assets\Scripts\WorldGeneration\GlobalGenSettings\WorldSettings.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\MoistureGen\WorldMoistureSettingsUI.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\MapGen\TextureGenerator.cs" />
+    <Compile Include="Assets\Scripts\WorldGeneration\BasicTypes\ChunkGenerationJob.cs" />
     <Compile Include="Assets\Scripts\WorldGeneration\SimplexNoise\OldNoise\SimplexNoise.cs" />
     <Compile Include="Assets\Scripts\Worlds\WorldObject.cs" />
     <Compile Include="Assets\Scripts\Worlds\WorldGenerator.cs" />
@@ -597,6 +598,14 @@
       <HintPath>Library\PackageCache\jillejr.newtonsoft.json-for-unity\Plugins\Newtonsoft.Json Editor\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.Collections.LowLevel.ILSupport">
+      <HintPath>Library\PackageCache\com.unity.collections\Unity.Collections.LowLevel.ILSupport\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>Library\PackageCache\com.unity.nuget.mono-cecil\Mono.Cecil.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\6000.0.24f1\Editor\Data\NetStandard\ref\2.1.0\netstandard.dll</HintPath>
       <Private>False</Private>
@@ -1097,6 +1106,10 @@
       <HintPath>Library\ScriptAssemblies\Unity.Rider.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.Collections.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.Collections.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.VisualScripting.Shared.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.Shared.Editor.dll</HintPath>
       <Private>False</Private>
@@ -1187,6 +1200,10 @@
     </Reference>
     <Reference Include="Unity.Burst.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Burst.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Collections">
+      <HintPath>Library\ScriptAssemblies\Unity.Collections.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Burst">
