@@ -1,4 +1,7 @@
+using NUnit.Framework;
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using Unity.Burst;
 using Unity.Collections;
 using UnityEngine;
@@ -7,6 +10,7 @@ using UnityEngine;
 [BurstCompile]
 public class Chunk : MonoBehaviour
 {
+    public GameObject thisChunk = null;
     public NativeArray<BlockData> blocks = new NativeArray<BlockData>(WorldGenerator.chunkSize * WorldGenerator.chunkHeight *  WorldGenerator.chunkSize, Allocator.Persistent);
     public Vector2Int position = new Vector2Int();
 
@@ -16,6 +20,11 @@ public class Chunk : MonoBehaviour
     public SimplexNoise.Layer noiseHeigthLayer;
 
     public bool isGenerated = false;
+    private void Awake()
+    {
+        thisChunk = gameObject;
+
+    }
     public void InitChunk()
     {
         position.x = (int)transform.position.x;
@@ -60,6 +69,7 @@ public class Chunk : MonoBehaviour
                         blockTemp = blocks[index];
                         blockTemp.blockType = BlockType.Surface;
                         blocks[index] = blockTemp;
+
                     }
                 }
             }

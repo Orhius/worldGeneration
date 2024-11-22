@@ -7,6 +7,10 @@ using UnityEngine;
 public struct ChunkGenerationJob : IJob
 {
     public NativeArray<BlockData> blocks;
+    public NativeArray<BlockData> blocksLeftChunk;
+    public NativeArray<BlockData> blocksRightChunk;
+    public NativeArray<BlockData> blocksForwardChunk;
+    public NativeArray<BlockData> blocksBackChunk;
     public Vector2Int position;
     public NativeList<Vector3> vertices;
     public NativeList<int> triangles;
@@ -26,6 +30,8 @@ public struct ChunkGenerationJob : IJob
     #region Block Gen
     private void GenerateBlock(Vector3Int coordinates)
     {
+        int index = coordinates.x + coordinates.z * WorldGenerator.chunkSize + coordinates.y * WorldGenerator.chunkSize * WorldGenerator.chunkSize;
+
         if (GetBlock(coordinates) == BlockType.Air) return;
 
         if (GetBlock(coordinates + Vector3Int.right) == BlockType.Air) GenerateRightSide(coordinates);
@@ -105,8 +111,7 @@ public struct ChunkGenerationJob : IJob
         triangles.Add(vertices.Length - 1);
         triangles.Add(vertices.Length - 2);
     }
-
-    private BlockType GetBlock(Vector3Int coordinates)
+    public BlockType GetBlock(Vector3Int coordinates)
     {
         if (coordinates.x >= 0 && coordinates.x < WorldGenerator.chunkSize
             && coordinates.y >= 0 && coordinates.y < WorldGenerator.chunkHeight
@@ -118,45 +123,66 @@ public struct ChunkGenerationJob : IJob
         }
         else
         {
-            Vector2Int nextChunkPos = new Vector2Int(position.x / WorldGenerator.chunkSize, position.y / WorldGenerator.chunkSize);
-
             if (coordinates.y >= WorldGenerator.chunkHeight) return BlockType.Air;
             else if (coordinates.y < 0) return BlockType.Surface;
 
 
             if (coordinates.x < 0)
             {
-                nextChunkPos.x--;
                 coordinates.x = WorldGenerator.chunkSize - 1;
+
+                if (blocksLeftChunk != null && blocksLeftChunk.Length > 0)
+                {
+                    int index = coordinates.x + coordinates.z * WorldGenerator.chunkSize + coordinates.y * WorldGenerator.chunkSize * WorldGenerator.chunkSize;
+
+                    return blocksLeftChunk[index].blockType;
+                }
+                return BlockType.Surface;
+
             }
             else if (coordinates.x >= WorldGenerator.chunkSize)
             {
-                nextChunkPos.x++;
                 coordinates.x = 0;
+
+                if (blocksRightChunk != null && blocksRightChunk.Length > 0)
+                {
+                    int index = coordinates.x + coordinates.z * WorldGenerator.chunkSize + coordinates.y * WorldGenerator.chunkSize * WorldGenerator.chunkSize;
+
+                    return blocksRightChunk[index].blockType;
+                }
+                return BlockType.Surface;
+
             }
 
             if (coordinates.z < 0)
             {
-                nextChunkPos.y--;
                 coordinates.z = WorldGenerator.chunkSize - 1;
+
+                if (blocksForwardChunk != null && blocksForwardChunk.Length > 0)
+                {
+
+                    int index = coordinates.x + coordinates.z * WorldGenerator.chunkSize + coordinates.y * WorldGenerator.chunkSize * WorldGenerator.chunkSize;
+
+                    return blocksForwardChunk[index].blockType;
+                }
+                return BlockType.Surface;
+
             }
             else if (coordinates.z >= WorldGenerator.chunkSize)
             {
-                nextChunkPos.y++;
                 coordinates.z = 0;
-            }
 
-            if (WorldGenerator.ChunkData.TryGetValue(nextChunkPos, out Chunk nextChunk))
-            {
+                if (blocksBackChunk != null && blocksBackChunk.Length > 0)
+                {
 
-                int index = coordinates.x + coordinates.z * WorldGenerator.chunkSize + coordinates.y * WorldGenerator.chunkSize * WorldGenerator.chunkSize;
+                    int index = coordinates.x + coordinates.z * WorldGenerator.chunkSize + coordinates.y * WorldGenerator.chunkSize * WorldGenerator.chunkSize;
 
-                return BlockType.Air;//nextChunk.blocks[index].blockType;
+                    return blocksBackChunk[index].blockType;
+                }
+                return BlockType.Surface;
+
             }
-            else
-            {
-                return BlockType.Air;
-            }
+            return BlockType.Air;
         }
     }
     #endregion

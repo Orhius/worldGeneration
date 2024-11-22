@@ -15,7 +15,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void Start()
     {
-        CheckCurrentChunk();
+        GlobalEventManager.PlayerChunkPositionChanged(currentChunk);
     }
     private void Update()
     {
@@ -26,10 +26,11 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void CheckCurrentChunk()
     {
+        Vector2Int oldChunk = currentChunk;
         currentChunk = new Vector2Int(playerCoord.x / WorldGenerator.chunkSize, playerCoord.z / WorldGenerator.chunkSize);
         if (playerCoord.x < 0) currentChunk.x -= 1;
         if (playerCoord.z < 0) currentChunk.y -= 1;
 
-        GlobalEventManager.PlayerChunkPositionChanged(currentChunk);
+        if(oldChunk != currentChunk) GlobalEventManager.PlayerChunkPositionChanged(currentChunk);
     }
 }
