@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Burst;
+using Unity.Burst.CompilerServices;
 using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
@@ -27,7 +28,7 @@ public class WorldGenerator : MonoBehaviour
     public static int chunkSize = 16;
     public static int chunkHeight = 128;
     public static int baseChunkHeight = chunkHeight/2;
-    public static byte chunkRenderingDistance = 24;
+    public static byte chunkRenderingDistance = 2;
 
     public static SimplexNoise.Layer noiseHeigthLayer = new();
     public static FastNoiseLite noiseLite = new FastNoiseLite();
@@ -38,7 +39,8 @@ public class WorldGenerator : MonoBehaviour
     public ConcurrentQueue<Chunk> ChunksMeshQueue = new ConcurrentQueue<Chunk>();
 
     public bool isGenerating = false;
-    int maxChunkGenSteps = (chunkRenderingDistance * 2 + 1) * (chunkRenderingDistance * 2 + 1);
+    [ReadOnly] int maxChunkGenSteps = (chunkRenderingDistance * 2 + 1) * (chunkRenderingDistance * 2 + 1);
+    [ReadOnly] int maxChunkInitSteps = (chunkRenderingDistance * 2 + 3) * (chunkRenderingDistance * 2 + 3);
 
     private void OnEnable()
     {
@@ -102,10 +104,12 @@ public class WorldGenerator : MonoBehaviour
     {
         List<Vector2Int> newChunkData = new();
         List<Vector2Int> oldChunkData = new();
+        List<Vector2Int> overdrawingTempChunks = new();
         int x = 0;
         int z = 0;
-        int dx = 0, dz = -1;
-        for (int i = 0; i < maxChunkGenSteps; i++)
+        int dx = 0;
+        int dz = -1;
+        for (int i = 0; i < maxChunkInitSteps; i++)
         {
             if (!ChunkData.ContainsKey(new Vector2Int(x + vector.x, z + vector.y)))
             {
@@ -113,14 +117,16 @@ public class WorldGenerator : MonoBehaviour
 
                 chunkObj.InitChunk();
                 ChunkData.Add(new Vector2Int(x + vector.x, z + vector.y), chunkObj);
-                newChunkData.Add(new Vector2Int(x + vector.x, z + vector.y));
-
+                if (i > maxChunkGenSteps)
+                {
+                    overdrawingTempChunks.Add(new Vector2Int(x + vector.x, z + vector.y));
+                }
             }
             else
             {
-                newChunkData.Add(new Vector2Int(x + vector.x, z + vector.y));
                 oldChunkData.Add(new Vector2Int(x + vector.x, z + vector.y));
             }
+            if (i < maxChunkGenSteps) newChunkData.Add(new Vector2Int(x + vector.x, z + vector.y));
 
             if (x == z || (x < 0 && x == - z) || (x > 0 && x == 1 - z))
             {
@@ -129,12 +135,6 @@ public class WorldGenerator : MonoBehaviour
             x += dx;
             z += dz;
         }
-        foreach (var item in ChunkData.Keys.Except(newChunkData).ToList())
-        {
-            Destroy(ChunkData[item].gameObject);
-            ChunkData.Remove(item);
-        }
-        newChunkData.Clear();
         x = 0;
         z = 0;
         dx = 0;
@@ -197,6 +197,20 @@ public class WorldGenerator : MonoBehaviour
             x += dx;
             z += dz;
         }
+        foreach (var item in ChunkData.Keys.Except(newChunkData).ToList())
+        {
+            GameObject temp = ChunkData[item].gameObject;
+            ChunkData.Remove(item);
+            Destroy(temp);
+        }
+        newChunkData.Clear();
+        foreach (var item in ChunkData.Keys.Intersect(overdrawingTempChunks).ToList())
+        {
+            GameObject temp = ChunkData[item].gameObject;
+            ChunkData.Remove(item);
+            Destroy(temp);
+        }
+        overdrawingTempChunks.Clear();
         oldChunkData.Clear();
         isGenerating = false;
     }

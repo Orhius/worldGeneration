@@ -1,7 +1,4 @@
-using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Reflection;
 using Unity.Burst;
 using Unity.Collections;
 using UnityEngine;
@@ -23,7 +20,6 @@ public class Chunk : MonoBehaviour
     private void Awake()
     {
         thisChunk = gameObject;
-
     }
     public void InitChunk()
     {
