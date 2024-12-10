@@ -4,7 +4,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Burst;
-using Unity.Burst.CompilerServices;
 using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
@@ -28,7 +27,7 @@ public class WorldGenerator : MonoBehaviour
     public static int chunkSize = 16;
     public static int chunkHeight = 128;
     public static int baseChunkHeight = chunkHeight/2;
-    public static byte chunkRenderingDistance = 2;
+    public static byte chunkRenderingDistance = 8;
 
     public static SimplexNoise.Layer noiseHeigthLayer = new();
     public static FastNoiseLite noiseLite = new FastNoiseLite();
@@ -69,13 +68,8 @@ public class WorldGenerator : MonoBehaviour
         warpNoiseLite.SetNoiseType(warpNoiseSettings.type);
         warpNoiseLite.SetFrequency(warpNoiseSettings.friquency);
         warpNoiseLite.SetDomainWarpAmp(warpNoiseSettings.amplitude);
-    }
-    private void Update()
-    {
-        if(ChunksMeshQueue.TryDequeue(out Chunk result))
-        {
-            result.GenerateChunk();
-        }
+
+        StartCoroutine(ChunkGenerationCoroutine());
     }
     public static void StartWorldGeneratorLoad(World world)
     {
@@ -213,6 +207,16 @@ public class WorldGenerator : MonoBehaviour
         overdrawingTempChunks.Clear();
         oldChunkData.Clear();
         isGenerating = false;
+    }
+    public IEnumerator ChunkGenerationCoroutine()
+    {
+        while (true)
+        {
+            yield return new WaitUntil(() => ChunksMeshQueue.Count() > 0);
+            ChunksMeshQueue.TryDequeue(out var chunk);
+            chunk.GenerateChunk();
+            yield return null;
+        }
     }
     public static float GenerateHeight(float x, float y)
     {

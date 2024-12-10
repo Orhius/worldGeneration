@@ -25,17 +25,6 @@ public class Chunk : MonoBehaviour
     {
         position.x = (int)transform.position.x;
         position.y = (int)transform.position.z;
-        for (int x = 0; x < WorldGenerator.chunkSize; x++)
-        {
-            for (int y = 0; y < WorldGenerator.chunkHeight; y++)
-            {
-                for (int z = 0; z < WorldGenerator.chunkSize; z++)
-                {
-                    int index = x + z * WorldGenerator.chunkSize + y * WorldGenerator.chunkSize * WorldGenerator.chunkSize;
-                    blocks[index] = new BlockData();
-                }
-            }
-        }
 
         GenerateHeight();
     }
@@ -52,6 +41,7 @@ public class Chunk : MonoBehaviour
                     for (int z = 0; z < height; z++)
                     {
                         int index = x + y * WorldGenerator.chunkSize + z * WorldGenerator.chunkSize * WorldGenerator.chunkSize;
+                        blocks[index] = new BlockData();
                         blockTemp = blocks[index];
                         blockTemp.blockType = BlockType.Surface;
                         blocks[index] = blockTemp;
@@ -62,6 +52,7 @@ public class Chunk : MonoBehaviour
                     for (int z = 0; z < WorldGenerator.chunkHeight; z++)
                     {
                         int index = x + y * WorldGenerator.chunkSize + z * WorldGenerator.chunkSize * WorldGenerator.chunkSize;
+                        blocks[index] = new BlockData();
                         blockTemp = blocks[index];
                         blockTemp.blockType = BlockType.Surface;
                         blocks[index] = blockTemp;
